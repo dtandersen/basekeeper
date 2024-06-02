@@ -9,15 +9,15 @@ public record OrderItemsCommand(List<LineItem> Items)
 
 public class OrderItemsCommandHandler : CommandHandler<OrderItemsCommand>
 {
-    private OrderRepository requisitionRepository;
+    private OrderRepository orderRepository;
 
     public OrderItemsCommandHandler(OrderRepository requisitionRepository)
     {
-        this.requisitionRepository = requisitionRepository;
+        this.orderRepository = requisitionRepository;
     }
 
     public void Handle(OrderItemsCommand command)
     {
-        requisitionRepository.Save(command.Items);
+        orderRepository.Save(command.Items);
     }
 }

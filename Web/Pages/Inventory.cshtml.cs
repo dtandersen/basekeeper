@@ -15,13 +15,13 @@ public class InventoryModel : PageModel
     private UpdateInventoryCommandHandler updateInventoryCommandHandler;
     private ListInventoryQueryHandler listInventoryQueryHandler;
 
-    public InventoryModel(ILogger<InventoryModel> logger, InventoryRepository inventoryRepository)
+    public InventoryModel(ILogger<InventoryModel> logger, InventoryRepository inventoryRepository, OrderRepository orderRepository)
     {
         _logger = logger;
         this.inventoryRepository = inventoryRepository;
         Json = "[]";
         updateInventoryCommandHandler = new UpdateInventoryCommandHandler(inventoryRepository);
-        listInventoryQueryHandler = new ListInventoryQueryHandler(inventoryRepository);
+        listInventoryQueryHandler = new ListInventoryQueryHandler(inventoryRepository, orderRepository);
     }
 
     public void OnGet()

@@ -36,6 +36,7 @@ public class YamlOrderRepository : OrderRepository
 
     public void Save(List<LineItem> lineItems)
     {
+        Console.WriteLine($"Saving {string.Join(", ", lineItems)}");
         using (StreamWriter streamWriter = new StreamWriter(ORDERS_YAML, false))
         {
             ISerializer serializer = new SerializerBuilder()

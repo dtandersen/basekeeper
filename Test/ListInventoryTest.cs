@@ -10,24 +10,43 @@ namespace Basekeeper.Tests;
 public class ListInventoryTest
 {
     private InventoryRepository inventoryRepository;
+    private OrderRepository orderRepository;
 
     public ListInventoryTest()
     {
         inventoryRepository = new YamlInventoryRepository();
+        orderRepository = new YamlOrderRepository();
+
         inventoryRepository.Reset();
+        orderRepository.Reset();
     }
 
     [Fact]
     public void Test1()
     {
-        var x = new List<LineItem> {
+        inventoryRepository.Save(new List<LineItem> {
             new LineItem(Item: "Iron", Quantity: 1)
-        };
-        inventoryRepository.Save(x);
+        });
 
-        ListInventoryQueryHandler query = new ListInventoryQueryHandler(inventoryRepository);
-        List<LineItem> items = query.Handle(new ListInventoryQuery());
-        Assert.That(items, Has.Items(Is.EqualTo(new LineItem(Item: "Iron", Quantity: 1))));
+        ListInventoryQueryHandler query = new ListInventoryQueryHandler(inventoryRepository, orderRepository);
+        List<InventoryItemDto> items = query.Handle(new ListInventoryQuery());
+        Assert.That(items, Is.OfLength(1));
+        Assert.That(items, Has.Items(Is.EqualTo(new InventoryItemDto(Item: "Iron", Quantity: 1, Available: 1))));
+    }
+
+    [Fact]
+    public void CalculatesAvailable()
+    {
+        orderRepository.Save(new List<LineItem> {
+            new LineItem(Item: "Iron", Quantity: 1)
+        });
+        inventoryRepository.Save(new List<LineItem> {
+            new LineItem(Item: "Iron", Quantity: 1)
+        });
+
+        ListInventoryQueryHandler query = new ListInventoryQueryHandler(inventoryRepository, orderRepository);
+        List<InventoryItemDto> items = query.Handle(new ListInventoryQuery());
+        Assert.That(items, Has.Items(Is.EqualTo(new InventoryItemDto(Item: "Iron", Quantity: 1, Available: 0))));
         Assert.That(items, Is.OfLength(1));
     }
 }

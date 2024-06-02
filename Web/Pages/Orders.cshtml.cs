@@ -10,24 +10,24 @@ namespace Web.Pages;
 public class OrdersModel : PageModel
 {
     private readonly ILogger<InventoryModel> _logger;
-    private readonly InventoryRepository inventoryRepository;
-    private readonly OrderRepository orderRepository;
+    // private readonly InventoryRepository inventoryRepository;
+    // private readonly OrderRepository orderRepository;
     public string Json { get; set; }
     private OrderItemsCommandHandler updateInventoryCommandHandler;
-    private ListInventoryQueryHandler listInventoryQueryHandler;
+    private ListOrdersQueryHandler listOrdersQueryHandler;
 
     public OrdersModel(ILogger<InventoryModel> logger, InventoryRepository inventoryRepository, OrderRepository orderRepository)
     {
         _logger = logger;
-        this.inventoryRepository = inventoryRepository;
+        // this.inventoryRepository = inventoryRepository;
         Json = "[]";
         updateInventoryCommandHandler = new OrderItemsCommandHandler(orderRepository);
-        listInventoryQueryHandler = new ListInventoryQueryHandler(inventoryRepository);
+        listOrdersQueryHandler = new ListOrdersQueryHandler(orderRepository);
     }
 
     public void OnGet()
     {
-        var Items = listInventoryQueryHandler.Handle(new ListInventoryQuery());
+        var Items = listOrdersQueryHandler.Handle(new ListOrdersQuery());
         Json = JsonSerializer.Serialize(Items);
         // Console.WriteLine($"{Json}");
     }
@@ -36,7 +36,7 @@ public class OrdersModel : PageModel
     {
         OrderItemsCommand ModelToCommand(OrdersFormModel model)
         {
-            // Console.WriteLine($"convert model {model}");
+            Console.WriteLine($"convert model {model}");
             List<LineItem> lineItems = new List<LineItem>();
             var items = model.Item;
             for (int i = 0; i < items.Count; i++)
