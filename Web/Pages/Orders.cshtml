@@ -1,0 +1,53 @@
+﻿@page
+@model OrdersModel
+@{
+    ViewData["Title"] = "Orders";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Orders</h1>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <div id="app">
+
+        <form method="post">
+            <table class="table table-striped table-bordered">
+                </thead>
+                <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Quantity</th>
+                </tr>
+                </thead>
+                <tr v-for="(item, index) in items" :key="index">
+                    <td><input name="item[]" v-model="item.Item"></td>
+                    <td><input name="quantity[]" v-model="item.Quantity"></td>
+                </tr>
+                <tr>
+                    <td colspan="2"> <input type="submit" value="Save">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    items: @Html.Raw(Model.Json)
+                                    }
+            },
+            mounted() {
+                this.items.push({ Item: '', Quantity: '' })
+            }
+        }).mount('#app')
+    </script>
+}

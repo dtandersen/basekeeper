@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<InventoryRepository, YamlInventoryRepository>();
+builder.Services.AddSingleton<OrderRepository, YamlOrderRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
