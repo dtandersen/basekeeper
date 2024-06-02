@@ -5,6 +5,56 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Base Keeper</h1>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <div id="app">
+
+        <form method="post">
+            <table class="table">
+                </thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                </tr>
+                </thead>
+                @* <tbody @foreach (var x in Model.Items)
+                {
+                <tr>
+                <td><input name="item[0]" value="@x.Item"></td>
+                <td><input name="quantity[0]" value="@x.Quantity"></td>
+                </tr>
+                } *@
+                <tr v-for="(item, index) in items" :key="index">
+                    <td><input name="item[]" v-model="item.Item"></td>
+                    <td><input name="quantity[]" v-model="item.Quantity"></td>
+                </tr>
+                <tr>
+                    <td colspan="2"> <input type="submit" value="Save">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+
+    </div>
+
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    message: 'Hello Vue!',
+                    items: @Html.Raw(Model.Json2)
+                }
+            },
+            mounted() {
+                this.items.push({ Item: '', Quantity: '' })
+            }
+        }).mount('#app')
+    </script>
+
+
 </div>
