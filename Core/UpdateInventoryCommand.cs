@@ -11,7 +11,7 @@ public class UpdateInventoryCommand
         this.emailService = emailService;
     }
 
-    public async void Execute(List<LineItem> lineItems)
+    public void Execute(List<LineItem> lineItems)
     {
         emailService.Save(lineItems);
     }

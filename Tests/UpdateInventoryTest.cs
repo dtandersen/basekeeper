@@ -2,13 +2,12 @@ using Core;
 
 namespace Basekeeper.Tests;
 
-//https://stackoverflow.com/questions/1408175/execute-unit-tests-serially-rather-than-in-parallel
 [Collection("Sequential")]
-public class ListInventoryQueryTest
+public class UpdateInventoryTest
 {
     private InventoryRepository inventoryRepository;
 
-    public ListInventoryQueryTest()
+    public UpdateInventoryTest()
     {
         inventoryRepository = new YamlInventoryRepository();
         inventoryRepository.Reset();
@@ -21,8 +20,11 @@ public class ListInventoryQueryTest
             new LineItem(Item: "Iron", Quantity: 1)
         });
 
-        ListInventoryQuery query = new ListInventoryQuery(inventoryRepository);
-        List<LineItem> items = query.Execute();
+        UpdateInventoryCommand query = new UpdateInventoryCommand(inventoryRepository);
+        query.Execute(new List<LineItem> {
+            new LineItem(Item: "Iron", Quantity: 1)
+        });
+        List<LineItem> items = inventoryRepository.All();
         Assert.That(items, Has.Items(Is.EqualTo(new LineItem(Item: "Iron", Quantity: 1))));
         Assert.That(items, Is.OfLength(1));
     }

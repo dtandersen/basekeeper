@@ -1,21 +1,13 @@
 using Core;
-using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
 public class YamlInventoryRepository : InventoryRepository
 {
-    // private List<LineItem> Items;
-
     public YamlInventoryRepository()
     {
-        // Items = new List<LineItem>    {
-        //     new LineItem(Item: "Iron", Quantity: 1),
-        //     new LineItem(Item: "Bronze", Quantity: 2),
-        //     new LineItem(Item: "Gold", Quantity: 3),
-        //     new LineItem(Item: "Diamond", Quantity: 4),
-        // };
     }
+
     public List<LineItem> All()
     {
         try
@@ -29,22 +21,19 @@ public class YamlInventoryRepository : InventoryRepository
                 return Items;
             }
         }
-        catch (FileNotFoundException e)
+        catch (FileNotFoundException)
         {
             return new List<LineItem>();
         }
     }
 
+    public void Reset()
+    {
+        Save(new List<LineItem>());
+    }
+
     public void Save(List<LineItem> items)
     {
-        // items = new List<LineItem>
-        // {
-        //     new LineItem(Item: "Iron", Quantity: 1),
-        //     new LineItem(Item: "Bronze", Quantity: 2),
-        //     new LineItem(Item: "Gold", Quantity: 3),
-        //     new LineItem(Item: "Diamond", Quantity: 4),
-        // };
-        // Console.WriteLine($"{items}");
         using (StreamWriter streamWriter = new StreamWriter("inventory.yaml", false))
         {
             ISerializer serializer = new SerializerBuilder()
@@ -52,6 +41,5 @@ public class YamlInventoryRepository : InventoryRepository
                 .Build();
             serializer.Serialize(streamWriter, items);
         }
-        // this.Items = items;
     }
 }
