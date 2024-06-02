@@ -7,11 +7,11 @@ namespace Basekeeper.Tests;
 
 //https://stackoverflow.com/questions/1408175/execute-unit-tests-serially-rather-than-in-parallel
 [Collection("Sequential")]
-public class ListInventoryQueryTest
+public class OrderItemTest
 {
     private InventoryRepository inventoryRepository;
 
-    public ListInventoryQueryTest()
+    public OrderItemTest()
     {
         inventoryRepository = new YamlInventoryRepository();
         inventoryRepository.Reset();

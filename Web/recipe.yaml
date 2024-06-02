@@ -1,0 +1,12 @@
+- product: Kit (Furnace)
+  ingredients:
+    - item: Ingot (Iron)
+      quantity: 30
+    - item: Ingot (Copper)
+      quantity: 10
+- product: Ingot (Steel)
+  ingredients:
+    - item: Iron
+      quantity: 0.75
+    - item: Hydrocarbon
+      quantity: 0.25
