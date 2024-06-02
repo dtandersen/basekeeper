@@ -1,4 +1,7 @@
-using Core;
+using Basekeeper.Command;
+using Basekeeper.Entity;
+using Basekeeper.Repository;
+using Basekeeper.Repository.Yaml;
 
 namespace Basekeeper.Tests;
 
@@ -20,10 +23,10 @@ public class UpdateInventoryTest
             new LineItem(Item: "Iron", Quantity: 1)
         });
 
-        UpdateInventoryCommand query = new UpdateInventoryCommand(inventoryRepository);
-        query.Execute(new List<LineItem> {
+        UpdateInventoryCommandHandler query = new UpdateInventoryCommandHandler(inventoryRepository);
+        query.Handle(new UpdateInventoryCommand(new List<LineItem> {
             new LineItem(Item: "Iron", Quantity: 1)
-        });
+        }));
         List<LineItem> items = inventoryRepository.All();
         Assert.That(items, Has.Items(Is.EqualTo(new LineItem(Item: "Iron", Quantity: 1))));
         Assert.That(items, Is.OfLength(1));

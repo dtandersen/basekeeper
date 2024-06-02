@@ -1,6 +1,8 @@
-using Core;
+using Basekeeper.Entity;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
+
+namespace Basekeeper.Repository.Yaml;
 
 public class YamlInventoryRepository : InventoryRepository
 {

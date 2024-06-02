@@ -1,6 +1,7 @@
-﻿using System.Diagnostics;
-using System.Text.Json;
-using Core;
+﻿using System.Text.Json;
+using Basekeeper.Command;
+using Basekeeper.Entity;
+using Basekeeper.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -9,61 +10,62 @@ namespace Web.Pages;
 public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
-    private readonly InventoryRepository _emailService;
-    // public List<LineItem> Items { get; set; }
-    public string Json2 { get; set; }
+    private readonly InventoryRepository inventoryRepository;
+    public string Json { get; set; }
+    private UpdateInventoryCommandHandler updateInventoryCommandHandler;
+    private ListInventoryQueryHandler listInventoryQueryHandler;
 
-    public IndexModel(ILogger<IndexModel> logger, InventoryRepository emailService)
+    public IndexModel(ILogger<IndexModel> logger, InventoryRepository inventoryRepository)
     {
         _logger = logger;
-        _emailService = emailService;
-        // Items = new List<LineItem>();
-        Json2 = "[]";
+        this.inventoryRepository = inventoryRepository;
+        Json = "[]";
+        updateInventoryCommandHandler = new UpdateInventoryCommandHandler(inventoryRepository);
+        listInventoryQueryHandler = new ListInventoryQueryHandler(inventoryRepository);
     }
 
     public void OnGet()
     {
-        // Console.WriteLine("OnGet");
-        ListInventoryQuery x = new ListInventoryQuery(_emailService);
-        var Items = x.Execute();
-        Json2 = JsonSerializer.Serialize(Items);
-        Console.WriteLine($"{Json2}");
+        var Items = listInventoryQueryHandler.Handle(new ListInventoryQuery());
+        Json = JsonSerializer.Serialize(Items);
+        // Console.WriteLine($"{Json}");
     }
 
-    // public void OnPost()
-    public IActionResult OnPost(FormModel model)
+    public IActionResult OnPost(InventoryFormModel model)
     {
-        List<LineItem> convertModel(FormModel model)
+        UpdateInventoryCommand ModelToCommand(InventoryFormModel model)
         {
+            // Console.WriteLine($"convert model {model}");
             List<LineItem> lineItems = new List<LineItem>();
-            for (int i = 0; i < model.Item.Count; i++)
+            var items = model.Item;
+            for (int i = 0; i < items.Count; i++)
             {
-                if (model.Item[i] != null && model.Quantity[i] != null)
+                var thisitem = items[i];
+                if (thisitem != null)
                 {
-                    int qty = (int)model.Quantity[i];
-                    lineItems.Add(new LineItem(Item: model.Item[i], Quantity: qty));
+                    int qty = model.Quantity == null ? 0 : Int32.Parse(model.Quantity[i] ?? "0");
+                    lineItems.Add(new LineItem(Item: thisitem, Quantity: qty));
                 }
             }
 
-            return lineItems;
+            return new UpdateInventoryCommand(lineItems);
         }
 
-        var handler = new UpdateInventoryCommand(_emailService);
-        List<LineItem> lineItems = convertModel(model);
-        handler.Execute(lineItems);
-        Console.WriteLine($"{model}");
+        UpdateInventoryCommand command = ModelToCommand(model);
+        updateInventoryCommandHandler.Handle(command);
+        // Console.WriteLine($"{model}");
 
         return RedirectToPage("./Index");
     }
 }
 
-public class FormModel
+public class InventoryFormModel
 {
     [BindProperty]
-    public List<string?>? Item { get; set; }
+    public List<string> Item { get; set; } = new List<string>();
 
     [BindProperty]
-    public List<int?>? Quantity { get; set; }
+    public List<string> Quantity { get; set; } = new List<string>();
 
     public override string ToString()
     {

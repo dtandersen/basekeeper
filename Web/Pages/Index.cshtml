@@ -1,11 +1,11 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Inventory";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Base Keeper</h1>
+    <h1 class="display-4">Inventory</h1>
 
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
@@ -16,16 +16,9 @@
                 </thead>
                 <tr>
                     <th scope="col">Item</th>
-                    <th scope="col">Quantity</th>
+                    <th scope="col">On Hand</th>
                 </tr>
                 </thead>
-                @* <tbody @foreach (var x in Model.Items)
-                {
-                <tr>
-                <td><input name="item[0]" value="@x.Item"></td>
-                <td><input name="quantity[0]" value="@x.Quantity"></td>
-                </tr>
-                } *@
                 <tr v-for="(item, index) in items" :key="index">
                     <td><input name="item[]" v-model="item.Item"></td>
                     <td><input name="quantity[]" v-model="item.Quantity"></td>
@@ -40,14 +33,16 @@
 
     </div>
 
+</div>
+
+@section Scripts {
     <script>
         const { createApp } = Vue
 
         createApp({
             data() {
                 return {
-                    message: 'Hello Vue!',
-                    items: @Html.Raw(Model.Json2)
+                    items: @Html.Raw(Model.Json)
                 }
             },
             mounted() {
@@ -55,6 +50,4 @@
             }
         }).mount('#app')
     </script>
-
-
-</div>
+}

@@ -1,5 +1,7 @@
-using System.Xml.Linq;
-using Core;
+
+using Basekeeper.Entity;
+
+namespace Basekeeper.Repository;
 
 public interface InventoryRepository
 {

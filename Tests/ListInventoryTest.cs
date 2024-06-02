@@ -1,4 +1,7 @@
-using Core;
+using Basekeeper.Command;
+using Basekeeper.Entity;
+using Basekeeper.Repository;
+using Basekeeper.Repository.Yaml;
 
 namespace Basekeeper.Tests;
 
@@ -17,12 +20,13 @@ public class ListInventoryQueryTest
     [Fact]
     public void Test1()
     {
-        inventoryRepository.Save(new List<LineItem> {
+        var x = new List<LineItem> {
             new LineItem(Item: "Iron", Quantity: 1)
-        });
+        };
+        inventoryRepository.Save(x);
 
-        ListInventoryQuery query = new ListInventoryQuery(inventoryRepository);
-        List<LineItem> items = query.Execute();
+        ListInventoryQueryHandler query = new ListInventoryQueryHandler(inventoryRepository);
+        List<LineItem> items = query.Handle(new ListInventoryQuery());
         Assert.That(items, Has.Items(Is.EqualTo(new LineItem(Item: "Iron", Quantity: 1))));
         Assert.That(items, Is.OfLength(1));
     }
