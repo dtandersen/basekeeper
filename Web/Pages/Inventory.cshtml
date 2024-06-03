@@ -25,9 +25,12 @@
                         <td><input name="item[]" v-model="item.Item"></td>
                         <td><input name="quantity[]" v-model="item.Quantity"></td>
                         <td>{{ item.Available }}</td>
+                        <td><button type="button" class="btn btn-secondary"
+                                v-on:click="removeItem(index)">Delete</button>
+                        </td>
                     </tr>
                     <tr>
-                        <td colspan="3"><input type="submit" value="Save"></td>
+                        <td colspan="4"><input type="submit" value="Save"></td>
                     </tr>
                 </tbody>
             </table>
@@ -45,10 +48,29 @@
             data() {
                 return {
                     items: @Html.Raw(Model.Json)
-                                                                    }
+                                                        }
             },
             mounted() {
                 this.items.push({ Item: '', Quantity: '' })
+            },
+            methods: {
+                removeItem(index) {
+                    // log that we removed an item
+                    console.log('removing item at index', index)
+                    this.items.splice(index, 1)
+                }
+            },
+            watch: {
+                items: {
+                    handler: function (newItems) {
+                        // append row if last item changed
+                        lastitem = newItems[newItems.length - 1]
+                        if (lastitem.Item !== '' || lastitem.Quantity !== '') {
+                            newItems.push({ Item: '', Quantity: '' })
+                        }
+                    },
+                    deep: true
+                }
             }
         }).mount('#app')
     </script>
