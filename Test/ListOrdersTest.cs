@@ -24,8 +24,8 @@ public class ListOrdersTest
     [Fact]
     public void Test1()
     {
-        orderRepository.Save(new List<LineItem> {
-            new LineItem(Item: "Iron", Quantity: 1)
+        orderRepository.ReplaceAll(new List<Order> {
+            new Order(Product: "Iron", Quantity: 1, Ingredients: new List<LineItem>())
         });
 
         ListOrdersQueryHandler query = new ListOrdersQueryHandler(orderRepository);

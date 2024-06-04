@@ -21,11 +21,6 @@ public class OrderItemCommandHandler : CommandHandler<OrderItemCommand>
 
     public void Handle(OrderItemCommand command)
     {
-        var items = orderRepository.All();
-        logger.Info($"Adding {command.Item} x{command.Quantity}");
-        logger.Debug($"Existing {string.Join(", ", items)}");
-        var newitems = items.Append(new LineItem(Item: command.Item, Quantity: command.Quantity));
-        logger.Debug($"New {string.Join(", ", newitems)}");
-        orderRepository.Save(newitems);
+        orderRepository.Create(new Order(Product: command.Item, Quantity: command.Quantity, Ingredients: new List<LineItem>()));
     }
 }

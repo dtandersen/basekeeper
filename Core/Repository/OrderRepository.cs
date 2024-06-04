@@ -4,9 +4,11 @@ namespace Basekeeper.Repository;
 
 public interface OrderRepository
 {
-    List<LineItem> All();
+    List<Order> All();
 
     void Reset();
 
-    void Save(IEnumerable<LineItem> lineItems);
+    void ReplaceAll(IEnumerable<Order> orders);
+
+    void Create(Order order);
 }

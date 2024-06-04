@@ -3,7 +3,7 @@ using Basekeeper.Repository;
 
 namespace Basekeeper.Command;
 
-public record OrderItemsCommand(List<LineItem> Items)
+public record OrderItemsCommand(List<Order> Items)
 {
 }
 
@@ -18,6 +18,6 @@ public class OrderItemsCommandHandler : CommandHandler<OrderItemsCommand>
 
     public void Handle(OrderItemsCommand command)
     {
-        orderRepository.Save(command.Items);
+        orderRepository.ReplaceAll(command.Items);
     }
 }

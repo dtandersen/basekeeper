@@ -18,7 +18,7 @@ public class ListOrdersQueryHandler : QueryHandler<ListOrdersQuery, List<OrderIt
     public List<OrderItemDto> Handle(ListOrdersQuery query)
     {
         var orders = orderRepository.All();
-        return orders.Select(order => new OrderItemDto(order.Item, order.Quantity)).ToList();
+        return orders.Select(order => new OrderItemDto(order.Product, order.Quantity)).ToList();
     }
 }
 

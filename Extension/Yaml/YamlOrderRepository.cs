@@ -16,7 +16,7 @@ public class YamlOrderRepository : OrderRepository
         logger = LogFactory.GetLogger(GetType());
     }
 
-    public List<LineItem> All()
+    public List<Order> All()
     {
         try
         {
@@ -25,7 +25,7 @@ public class YamlOrderRepository : OrderRepository
                 IDeserializer deserializer = new DeserializerBuilder()
                     .WithNamingConvention(CamelCaseNamingConvention.Instance)
                     .Build();
-                var items = deserializer.Deserialize<List<LineItem>>(streamReader);
+                var items = deserializer.Deserialize<List<Order>>(streamReader);
                 logger.Info($"Loaded {string.Join(",", items)}");
                 return items;
             }
@@ -33,7 +33,7 @@ public class YamlOrderRepository : OrderRepository
         catch (FileNotFoundException)
         {
             logger.Info($"{ORDERS_YAML} doesn't exist");
-            return new List<LineItem>();
+            return new List<Order>();
         }
     }
 
@@ -43,7 +43,15 @@ public class YamlOrderRepository : OrderRepository
         File.Delete(ORDERS_YAML);
     }
 
-    public void Save(IEnumerable<LineItem> lineItems)
+    public void Create(Order order)
+    {
+        logger.Info($"Saving {order}...");
+        var items = All();
+        var newitems = items.Append(order);
+        ReplaceAll(newitems);
+    }
+
+    public void ReplaceAll(IEnumerable<Order> lineItems)
     {
         logger.Info($"Saving {string.Join(",", lineItems)}...");
         using (StreamWriter streamWriter = new StreamWriter(File.Open(ORDERS_YAML, FileMode.Create)))
