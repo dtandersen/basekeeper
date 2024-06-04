@@ -18,23 +18,7 @@ public class YamlOrderRepository : OrderRepository
 
     public List<Order> All()
     {
-        try
-        {
-            using (StreamReader streamReader = new StreamReader(ORDERS_YAML))
-            {
-                IDeserializer deserializer = new DeserializerBuilder()
-                    .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                    .Build();
-                var items = deserializer.Deserialize<List<Order>>(streamReader);
-                logger.Info($"Loaded {string.Join(",", items)}");
-                return items;
-            }
-        }
-        catch (FileNotFoundException)
-        {
-            logger.Info($"{ORDERS_YAML} doesn't exist");
-            return new List<Order>();
-        }
+        return YamlHelper.Read(ORDERS_YAML, new List<Order>());
     }
 
     public void Reset()
@@ -54,12 +38,6 @@ public class YamlOrderRepository : OrderRepository
     public void ReplaceAll(IEnumerable<Order> lineItems)
     {
         logger.Info($"Saving {string.Join(",", lineItems)}...");
-        using (StreamWriter streamWriter = new StreamWriter(File.Open(ORDERS_YAML, FileMode.Create)))
-        {
-            ISerializer serializer = new SerializerBuilder()
-                .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                .Build();
-            serializer.Serialize(streamWriter, lineItems);
-        }
+        YamlHelper.Write(ORDERS_YAML, lineItems.ToList());
     }
 }

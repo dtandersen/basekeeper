@@ -48,8 +48,8 @@ public class OrdersModel : PageModel
                     lineItems.Add(new LineItem(Item: thisitem, Quantity: qty));
                 }
             }
-
-            return new OrderItemsCommand(lineItems);
+            var orders = lineItems.Select(x => new Order(Item: x.Item, Quantity: x.Quantity, Components: new List<LineItem>())).ToList();
+            return new OrderItemsCommand(orders);
         }
 
         var command = ModelToCommand(model);

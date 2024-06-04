@@ -5,9 +5,7 @@ namespace Basekeeper.Repository;
 
 public interface RecipeRepository
 {
-    // void Save(List<LineItem> items);
+    void Create(Recipe recipe);
 
-    // List<LineItem> All();
-
-    // void Reset();
+    Recipe? FindByName(string product);
 }

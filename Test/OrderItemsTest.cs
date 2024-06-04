@@ -1,7 +1,10 @@
 using Basekeeper.Command;
 using Basekeeper.Entity;
+using Basekeeper.Matcher;
 using Basekeeper.Repository;
 using Basekeeper.Repository.Yaml;
+using TelemRec;
+using Xunit.Abstractions;
 
 namespace Basekeeper.Tests;
 
@@ -11,8 +14,9 @@ public class OrderItemsTest
 {
     private OrderRepository requisitionRepository;
 
-    public OrderItemsTest()
+    public OrderItemsTest(ITestOutputHelper output)
     {
+        XunitLogger.Init(output);
         requisitionRepository = new YamlOrderRepository();
         requisitionRepository.Reset();
     }
@@ -20,7 +24,7 @@ public class OrderItemsTest
     [Fact]
     public void Test1()
     {
-        var command = new OrderItemsCommand(new List<Order> { new Order(Product: "Iron", Quantity: 1, Ingredients: new List<LineItem>()) });
+        var command = new OrderItemsCommand(new List<Order> { new Order(Item: "Iron", Quantity: 1, Components: new List<LineItem>()) });
         var handler = new OrderItemsCommandHandler(requisitionRepository);
         handler.Handle(command);
 
@@ -28,6 +32,6 @@ public class OrderItemsTest
         // List<LineItem> items = query.Handle(new ListInventoryQuery());
         var items = requisitionRepository.All();
         Assert.That(items, Is.OfLength(1));
-        Assert.That(items, Has.Items(new OrderMatcher(new Order(Product: "Iron", Quantity: 1, Ingredients: new List<LineItem>()))));
+        Assert.That(items, Has.Items(BasekeeperMatchers.EqualToOrder(new Order(Item: "Iron", Quantity: 1, Components: new List<LineItem>()))));
     }
 }

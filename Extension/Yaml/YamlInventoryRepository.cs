@@ -1,6 +1,4 @@
 using Basekeeper.Entity;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 
 namespace Basekeeper.Repository.Yaml;
 
@@ -12,21 +10,7 @@ public class YamlInventoryRepository : InventoryRepository
 
     public List<LineItem> All()
     {
-        try
-        {
-            using (StreamReader streamReader = new StreamReader("inventory.yaml"))
-            {
-                IDeserializer deserializer = new DeserializerBuilder()
-                    .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                    .Build();
-                var Items = deserializer.Deserialize<List<LineItem>>(streamReader);
-                return Items;
-            }
-        }
-        catch (FileNotFoundException)
-        {
-            return new List<LineItem>();
-        }
+        return YamlHelper.Read("inventory.yaml", new List<LineItem>());
     }
 
     public void Reset()
@@ -36,12 +20,6 @@ public class YamlInventoryRepository : InventoryRepository
 
     public void Save(List<LineItem> items)
     {
-        using (StreamWriter streamWriter = new StreamWriter("inventory.yaml", false))
-        {
-            ISerializer serializer = new SerializerBuilder()
-                .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                .Build();
-            serializer.Serialize(streamWriter, items);
-        }
+        YamlHelper.Write("inventory.yaml", items);
     }
 }

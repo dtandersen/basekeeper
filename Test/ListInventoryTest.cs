@@ -2,6 +2,8 @@ using Basekeeper.Command;
 using Basekeeper.Entity;
 using Basekeeper.Repository;
 using Basekeeper.Repository.Yaml;
+using TelemRec;
+using Xunit.Abstractions;
 
 namespace Basekeeper.Tests;
 
@@ -12,8 +14,9 @@ public class ListInventoryTest
     private InventoryRepository inventoryRepository;
     private OrderRepository orderRepository;
 
-    public ListInventoryTest()
+    public ListInventoryTest(ITestOutputHelper output)
     {
+        XunitLogger.Init(output);
         inventoryRepository = new YamlInventoryRepository();
         orderRepository = new YamlOrderRepository();
 
@@ -38,7 +41,7 @@ public class ListInventoryTest
     public void CalculatesAvailable()
     {
         orderRepository.ReplaceAll(new List<Order> {
-            new Order(Product: "Iron", Quantity: 1, Ingredients: new List<LineItem>())
+            new Order(Item: "Iron", Quantity: 1, Components: new List<LineItem>())
         });
         inventoryRepository.Save(new List<LineItem> {
             new LineItem(Item: "Iron", Quantity: 1)

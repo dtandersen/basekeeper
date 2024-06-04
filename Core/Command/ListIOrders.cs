@@ -1,12 +1,11 @@
-﻿using Basekeeper.Entity;
-using Basekeeper.Repository;
+﻿using Basekeeper.Repository;
 
 namespace Basekeeper.Command;
 
 public class ListOrdersQuery { }
 
 
-public class ListOrdersQueryHandler : QueryHandler<ListOrdersQuery, List<OrderItemDto>>
+public class ListOrdersQueryHandler : QueryHandler<ListOrdersQuery, List<OrderDto>>
 {
     private readonly OrderRepository orderRepository;
 
@@ -15,11 +14,11 @@ public class ListOrdersQueryHandler : QueryHandler<ListOrdersQuery, List<OrderIt
         this.orderRepository = orderRepository;
     }
 
-    public List<OrderItemDto> Handle(ListOrdersQuery query)
+    public List<OrderDto> Handle(ListOrdersQuery query)
     {
         var orders = orderRepository.All();
-        return orders.Select(order => new OrderItemDto(order.Product, order.Quantity)).ToList();
+        return orders.Select(order => new OrderDto(order.Item, order.Quantity)).ToList();
     }
 }
 
-public record OrderItemDto(string Item, int Quantity);
+public record OrderDto(string Item, int Quantity);
