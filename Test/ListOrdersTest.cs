@@ -25,12 +25,12 @@ public class ListOrdersTest
     public void Test1()
     {
         orderRepository.ReplaceAll(new List<Order> {
-            new Order(Product: "Iron", Quantity: 1, Ingredients: new List<LineItem>())
+            new Order(Item: "Iron", Quantity: 1, Components: new List<LineItem>())
         });
 
         ListOrdersQueryHandler query = new ListOrdersQueryHandler(orderRepository);
-        List<OrderItemDto> items = query.Handle(new ListOrdersQuery());
+        List<OrderDto> items = query.Handle(new ListOrdersQuery());
         Assert.That(items, Is.OfLength(1));
-        Assert.That(items, Has.Items(Is.EqualTo(new OrderItemDto(Item: "Iron", Quantity: 1))));
+        Assert.That(items, Has.Items(Is.EqualTo(new OrderDto(Item: "Iron", Quantity: 1))));
     }
 }

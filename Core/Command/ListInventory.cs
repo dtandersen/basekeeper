@@ -22,7 +22,7 @@ public class ListInventoryQueryHandler : QueryHandler<ListInventoryQuery, List<I
         var orders = orderRepository.All();
         var inventory = inventoryRepository.All();
         var items2 = inventory.Select(item =>
-            new InventoryItemDto(item.Item, item.Quantity, item.Quantity - orders.Where(order => order.Product == item.Item).Sum(order => order.Quantity)))
+            new InventoryItemDto(item.Item, item.Quantity, item.Quantity - orders.Where(order => order.Item == item.Item).Sum(order => order.Quantity)))
             .ToList();
 
         return items2;

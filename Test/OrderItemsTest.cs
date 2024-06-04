@@ -20,7 +20,7 @@ public class OrderItemsTest
     [Fact]
     public void Test1()
     {
-        var command = new OrderItemsCommand(new List<Order> { new Order(Product: "Iron", Quantity: 1, Ingredients: new List<LineItem>()) });
+        var command = new OrderItemsCommand(new List<Order> { new Order(Item: "Iron", Quantity: 1, Components: new List<LineItem>()) });
         var handler = new OrderItemsCommandHandler(requisitionRepository);
         handler.Handle(command);
 
@@ -28,6 +28,6 @@ public class OrderItemsTest
         // List<LineItem> items = query.Handle(new ListInventoryQuery());
         var items = requisitionRepository.All();
         Assert.That(items, Is.OfLength(1));
-        Assert.That(items, Has.Items(new OrderMatcher(new Order(Product: "Iron", Quantity: 1, Ingredients: new List<LineItem>()))));
+        Assert.That(items, Has.Items(new OrderMatcher(new Order(Item: "Iron", Quantity: 1, Components: new List<LineItem>()))));
     }
 }

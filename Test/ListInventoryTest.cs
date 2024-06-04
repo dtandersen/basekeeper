@@ -38,7 +38,7 @@ public class ListInventoryTest
     public void CalculatesAvailable()
     {
         orderRepository.ReplaceAll(new List<Order> {
-            new Order(Product: "Iron", Quantity: 1, Ingredients: new List<LineItem>())
+            new Order(Item: "Iron", Quantity: 1, Components: new List<LineItem>())
         });
         inventoryRepository.Save(new List<LineItem> {
             new LineItem(Item: "Iron", Quantity: 1)

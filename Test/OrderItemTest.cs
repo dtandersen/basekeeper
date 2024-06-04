@@ -24,30 +24,30 @@ public class OrderItemTest
     [Fact]
     public void SavesTheItem()
     {
-        var command = new OrderItemCommand(Item: "Iron", Quantity: 1);
-        var handler = new OrderItemCommandHandler(orderRepository);
+        var command = new CreateOrderCommand(Item: "Iron", Quantity: 1);
+        var handler = new CreateOrderCommandHandler(orderRepository);
         handler.Handle(command);
 
         var items = orderRepository.All();
         Assert.That(items, Is.OfLength(1));
-        Assert.That(items, Has.Items(new OrderMatcher(new Order(Product: "Iron", Quantity: 1, Ingredients: new List<LineItem>()))));
+        Assert.That(items, Has.Items(new OrderMatcher(new Order(Item: "Iron", Quantity: 1, Components: new List<LineItem>()))));
     }
 
     [Fact]
     public void PreservesItems()
     {
-        orderRepository.ReplaceAll(new List<Order> { new Order(Product: "Iron", Quantity: 1, Ingredients: new List<LineItem>()) });
+        orderRepository.ReplaceAll(new List<Order> { new Order(Item: "Iron", Quantity: 1, Components: new List<LineItem>()) });
 
-        var command = new OrderItemCommand(Item: "Lead", Quantity: 2);
-        var handler = new OrderItemCommandHandler(orderRepository);
+        var command = new CreateOrderCommand(Item: "Lead", Quantity: 2);
+        var handler = new CreateOrderCommandHandler(orderRepository);
         handler.Handle(command);
 
         // Is.EqualTo("bob").Matches("bob");
 
         var items = orderRepository.All();
         Assert.That(items, Is.OfLength(2));
-        Assert.That(items, Has.Item(new OrderMatcher(new Order(Product: "Iron", Quantity: 1, Ingredients: new List<LineItem>()))));
-        Assert.That(items, Has.Item(new OrderMatcher(new Order(Product: "Lead", Quantity: 2, Ingredients: new List<LineItem>()))));
+        Assert.That(items, Has.Item(new OrderMatcher(new Order(Item: "Iron", Quantity: 1, Components: new List<LineItem>()))));
+        Assert.That(items, Has.Item(new OrderMatcher(new Order(Item: "Lead", Quantity: 2, Components: new List<LineItem>()))));
     }
 }
 
@@ -62,17 +62,17 @@ public class OrderMatcher : Matcher<Order>
 
     public override void DescribeTo(IDescription description)
     {
-        description.AppendText($"Order(Product: {expected.Product}, Quantity: {expected.Quantity})");
+        description.AppendText($"Order(Product: {expected.Item}, Quantity: {expected.Quantity})");
     }
 
     public override bool Matches(Order actual)
     {
-        List<IMatcher<LineItem>> matchers = expected.Ingredients.Select(x => Is.EqualTo(x)).ToList();
+        List<IMatcher<LineItem>> matchers = expected.Components.Select(x => Is.EqualTo(x)).ToList();
         // Contains.
         // return true;
-        return actual.Product == expected.Product
+        return actual.Item == expected.Item
         && actual.Quantity == expected.Quantity
-        && actual.Ingredients.Count == expected.Ingredients.Count
-        && Has.Items(matchers.ToArray()).Matches(actual.Ingredients);
+        && actual.Components.Count == expected.Components.Count
+        && Has.Items(matchers.ToArray()).Matches(actual.Components);
     }
 }
