@@ -8,5 +8,5 @@ public interface OrderRepository
 
     void Reset();
 
-    void Save(List<LineItem> lineItems);
+    void Save(IEnumerable<LineItem> lineItems);
 }

@@ -2,6 +2,8 @@ using Basekeeper.Command;
 using Basekeeper.Entity;
 using Basekeeper.Repository;
 using Basekeeper.Repository.Yaml;
+using TelemRec;
+using Xunit.Abstractions;
 
 namespace Basekeeper.Tests;
 
@@ -9,25 +11,39 @@ namespace Basekeeper.Tests;
 [Collection("Sequential")]
 public class OrderItemTest
 {
-    private OrderRepository requisitionRepository;
+    private OrderRepository orderRepository;
 
-    public OrderItemTest()
+    public OrderItemTest(ITestOutputHelper output)
     {
-        requisitionRepository = new YamlOrderRepository();
-        requisitionRepository.Reset();
+        XunitLogger.Init(output);
+        orderRepository = new YamlOrderRepository();
+        orderRepository.Reset();
     }
 
     [Fact]
-    public void Test1()
+    public void SavesTheItem()
     {
         var command = new OrderItemCommand(Item: "Iron", Quantity: 1);
-        var handler = new OrderItemCommandHandler(requisitionRepository);
+        var handler = new OrderItemCommandHandler(orderRepository);
         handler.Handle(command);
 
-        // ListInventoryQueryHandler query = new ListInventoryQueryHandler(inventoryRepository);
-        // List<LineItem> items = query.Handle(new ListInventoryQuery());
-        var items = requisitionRepository.All();
+        var items = orderRepository.All();
         Assert.That(items, Is.OfLength(1));
         Assert.That(items, Has.Items(Is.EqualTo(new LineItem(Item: "Iron", Quantity: 1))));
+    }
+
+    [Fact]
+    public void PreservesItems()
+    {
+        orderRepository.Save(new List<LineItem> { new LineItem(Item: "Iron", Quantity: 1) });
+
+        var command = new OrderItemCommand(Item: "Lead", Quantity: 2);
+        var handler = new OrderItemCommandHandler(orderRepository);
+        handler.Handle(command);
+
+        var items = orderRepository.All();
+        Assert.That(items, Is.OfLength(2));
+        Assert.That(items, Has.Items(Is.EqualTo(new LineItem(Item: "Iron", Quantity: 1))));
+        Assert.That(items, Has.Items(Is.EqualTo(new LineItem(Item: "Lead", Quantity: 2))));
     }
 }
