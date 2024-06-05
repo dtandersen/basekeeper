@@ -1,6 +1,6 @@
 namespace Basekeeper.Entity;
 
-public record LineItem(String Item, int Quantity)
+public record LineItem(String Item, float Quantity)
 {
     public LineItem() : this("", 0)
     {

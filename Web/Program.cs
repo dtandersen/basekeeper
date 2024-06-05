@@ -1,6 +1,9 @@
+using Basekeeper.Diagnostics;
 using Basekeeper.Repository;
 using Basekeeper.Repository.Yaml;
 using Web.Pages;
+
+ConsoleLogger.Init();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<InventoryRepository, YamlInventoryRepository>();
 builder.Services.AddSingleton<OrderRepository, YamlOrderRepository>();
+builder.Services.AddSingleton<RecipeRepository, YamlRecipeRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

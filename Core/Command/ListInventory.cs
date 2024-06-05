@@ -29,4 +29,4 @@ public class ListInventoryQueryHandler : QueryHandler<ListInventoryQuery, List<I
     }
 }
 
-public record InventoryItemDto(string Item, int Quantity, int Available);
+public record InventoryItemDto(string Item, float Quantity, float Available);

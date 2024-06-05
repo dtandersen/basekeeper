@@ -1,3 +1,5 @@
+using Basekeeper.Diagnostics;
+
 namespace TelemRec;
 
 public delegate Logger CreateLogger(string scope);
@@ -25,7 +27,8 @@ public class LogFactory
     {
         if (Factory.Value == null)
         {
-            throw new InvalidOperationException("LogFactory.Factory is not set");
+            //throw new InvalidOperationException("LogFactory.Factory is not set");
+            Factory.Value = (scope) => new ConsoleLogger(scope);
         }
 
         Logger logger = Factory.Value.Invoke(scope);

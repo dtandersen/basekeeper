@@ -15,14 +15,16 @@ public class OrdersModel : PageModel
     public string Json { get; set; }
     private OrderItemsCommandHandler updateInventoryCommandHandler;
     private ListOrdersQueryHandler listOrdersQueryHandler;
+    private CreateOrderCommandHandler createOrderCommandHandler;
 
-    public OrdersModel(ILogger<InventoryModel> logger, InventoryRepository inventoryRepository, OrderRepository orderRepository)
+    public OrdersModel(ILogger<InventoryModel> logger, InventoryRepository inventoryRepository, OrderRepository orderRepository, RecipeRepository recipeRepository)
     {
         _logger = logger;
         // this.inventoryRepository = inventoryRepository;
         Json = "[]";
         updateInventoryCommandHandler = new OrderItemsCommandHandler(orderRepository);
         listOrdersQueryHandler = new ListOrdersQueryHandler(orderRepository);
+        createOrderCommandHandler = new CreateOrderCommandHandler(orderRepository, recipeRepository);
     }
 
     public void OnGet()
@@ -32,28 +34,57 @@ public class OrdersModel : PageModel
         // Console.WriteLine($"{Json}");
     }
 
-    public IActionResult OnPost(OrdersFormModel model)
+    //     public IActionResult OnPost(OrdersFormModel model)
+    //     {
+    //         OrderItemsCommand ModelToCommand(OrdersFormModel model)
+    //         {
+    //             Console.WriteLine($"convert model {model}");
+    //             List<LineItem> lineItems = new List<LineItem>();
+    //             var items = model.Item;
+    //             for (int i = 0; i < items.Count; i++)
+    //             {
+    //                 var thisitem = items[i];
+    //                 if (thisitem != null)
+    //                 {
+    //                     int qty = model.Quantity == null ? 0 : Int32.Parse(model.Quantity[i] ?? "0");
+    //                     lineItems.Add(new LineItem(Item: thisitem, Quantity: qty));
+    //                 }
+    //             }
+    //             var orders = lineItems.Select(x => new Order(Item: x.Item, Quantity: x.Quantity, Components: new List<LineItem>())).ToList();
+    //             return new OrderItemsCommand(orders);
+    //         }
+
+    //         var command = ModelToCommand(model);
+    //         updateInventoryCommandHandler.Handle(command);
+    //         // Console.WriteLine($"{model}");
+
+    //         return RedirectToPage("./Orders");
+    //     }
+    // }
+
+    public IActionResult OnPost(OrderFormModel model)
     {
-        OrderItemsCommand ModelToCommand(OrdersFormModel model)
+        CreateOrderCommand ModelToCommand(OrderFormModel model)
         {
             Console.WriteLine($"convert model {model}");
-            List<LineItem> lineItems = new List<LineItem>();
-            var items = model.Item;
-            for (int i = 0; i < items.Count; i++)
-            {
-                var thisitem = items[i];
-                if (thisitem != null)
-                {
-                    int qty = model.Quantity == null ? 0 : Int32.Parse(model.Quantity[i] ?? "0");
-                    lineItems.Add(new LineItem(Item: thisitem, Quantity: qty));
-                }
-            }
-            var orders = lineItems.Select(x => new Order(Item: x.Item, Quantity: x.Quantity, Components: new List<LineItem>())).ToList();
-            return new OrderItemsCommand(orders);
+            // List<LineItem> lineItems = new List<LineItem>();
+            // var items = model.Item;
+            // for (int i = 0; i < items.Count; i++)
+            // {
+            //     var thisitem = items[i];
+            //     if (thisitem != null)
+            //     {
+            //         int qty = model.Quantity == null ? 0 : Int32.Parse(model.Quantity[i] ?? "0");
+            //         lineItems.Add(new LineItem(Item: thisitem, Quantity: qty));
+            //     }
+            // }
+            // var orders = lineItems.Select(x => new Order(Item: x.Item, Quantity: x.Quantity, Components: new List<LineItem>())).ToList();
+            // return new OrderItemsCommand(orders);
+            return new CreateOrderCommand(Item: model.Item, Quantity: Int32.Parse(model.Quantity));
         }
 
         var command = ModelToCommand(model);
-        updateInventoryCommandHandler.Handle(command);
+        createOrderCommandHandler.Handle(command);
         // Console.WriteLine($"{model}");
 
         return RedirectToPage("./Orders");
@@ -67,6 +98,20 @@ public class OrdersFormModel
 
     [BindProperty]
     public List<string> Quantity { get; set; } = new List<string>();
+
+    public override string ToString()
+    {
+        return $"FormModel {{ Item={String.Join(",", Item)}, Quantity={String.Join(",", Quantity)} }}";
+    }
+}
+
+public class OrderFormModel
+{
+    [BindProperty]
+    public string Item { get; set; }
+
+    [BindProperty]
+    public string Quantity { get; set; }
 
     public override string ToString()
     {
