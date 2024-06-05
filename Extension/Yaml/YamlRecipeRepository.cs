@@ -13,9 +13,18 @@ public class YamlRecipeRepository : RecipeRepository
         logger = LogFactory.GetLogger(GetType());
     }
 
+    public List<Recipe> All()
+    {
+        var recipes = YamlHelper.Read<List<Recipe>>(RECIPE_YAML, new List<Recipe>());
+
+        return recipes;
+    }
+
     public void Create(Recipe recipe)
     {
-        YamlHelper.Write(RECIPE_YAML, new List<Recipe> { recipe });
+        var recipes = All();
+        var newrecipes = recipes.Append(recipe);
+        YamlHelper.Write(RECIPE_YAML, newrecipes);
     }
 
     public Recipe? FindByName(string product)
@@ -26,5 +35,10 @@ public class YamlRecipeRepository : RecipeRepository
         var recipe = recipes.FirstOrDefault(r => r.Product == product);
         logger.Info($"Found recipe: {recipe}");
         return recipe;
+    }
+
+    public void Reset()
+    {
+        File.Delete(RECIPE_YAML);
     }
 }
