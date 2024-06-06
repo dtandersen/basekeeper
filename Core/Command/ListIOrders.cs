@@ -21,4 +21,4 @@ public class ListOrdersQueryHandler : QueryHandler<ListOrdersQuery, List<OrderDt
     }
 }
 
-public record OrderDto(string Item, int Quantity);
+public record OrderDto(string Item, float Quantity);

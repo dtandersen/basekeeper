@@ -1,5 +1,6 @@
 using Basekeeper.Command;
 using Basekeeper.Entity;
+using Basekeeper.Matcher;
 using Basekeeper.Repository;
 using Basekeeper.Repository.Yaml;
 using TelemRec;
@@ -34,6 +35,6 @@ public class ListOrdersTest
         ListOrdersQueryHandler query = new ListOrdersQueryHandler(orderRepository);
         List<OrderDto> items = query.Handle(new ListOrdersQuery());
         Assert.That(items, Is.OfLength(1));
-        Assert.That(items, Has.Items(Is.EqualTo(new OrderDto(Item: "Iron", Quantity: 1))));
+        Assert.That(items, Has.Items(BasekeeperMatchers.EqualToOrderDto(new OrderDto(Item: "Iron", Quantity: 1))));
     }
 }

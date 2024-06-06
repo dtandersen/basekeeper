@@ -3,7 +3,7 @@ using NHamcrest.Core;
 
 namespace Basekeeper.Matcher;
 
-public class OrderMatcher : Matcher<Order>
+public class OrderMatcher : Matcher<Order>, IMatcher<Order>
 {
     private readonly Order expected;
 

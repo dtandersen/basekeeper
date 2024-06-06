@@ -24,7 +24,7 @@ public class OrderItemsTest
     [Fact]
     public void Test1()
     {
-        var command = new OrderItemsCommand(new List<Order> { new Order(Item: "Iron", Quantity: 1, Components: new List<LineItem>()) });
+        var command = new OrderItemsCommand(new List<Order> { new Order(Item: "actual", Quantity: 1, Components: new List<LineItem>()) });
         var handler = new OrderItemsCommandHandler(requisitionRepository);
         handler.Handle(command);
 
@@ -32,6 +32,9 @@ public class OrderItemsTest
         // List<LineItem> items = query.Handle(new ListInventoryQuery());
         var items = requisitionRepository.All();
         Assert.That(items, Is.OfLength(1));
-        Assert.That(items, Has.Items(BasekeeperMatchers.EqualToOrder(new Order(Item: "Iron", Quantity: 1, Components: new List<LineItem>()))));
+        Assert.That(items, Has.Items(BasekeeperMatchers.EqualToOrder(new Order(Item: "actual", Quantity: 1, Components: new List<LineItem>()))));
+
+        // Assert.That(new int[] { 1, 2, 3 }, Has.Items(Is.EqualTo(2), Is.EqualTo(3), Is.EqualTo(4)));
+        // Assert.That(items[0], BasekeeperMatchers.EqualToOrder(new Order(Item: "expected", Quantity: 1, Components: new List<LineItem>())));
     }
 }
