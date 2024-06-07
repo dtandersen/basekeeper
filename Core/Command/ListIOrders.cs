@@ -17,8 +17,17 @@ public class ListOrdersQueryHandler : QueryHandler<ListOrdersQuery, List<OrderDt
     public List<OrderDto> Handle(ListOrdersQuery query)
     {
         var orders = orderRepository.All();
-        return orders.Select(order => new OrderDto(order.Item, order.Quantity)).ToList();
+        // var items=
+        return orders.Select(order => new OrderDto(order.Item, order.Quantity, order.Components.Select(
+
+            item => new LineItemDto(Item: item.Item, Quantity: item.Quantity)).ToList())).ToList();
     }
 }
 
-public record OrderDto(string Item, float Quantity);
+public record OrderDto(string Item, float Quantity, List<LineItemDto> Components)
+{
+    public override string ToString()
+    {
+        return $"OrderDto {{ Item={Item}, Quantity={Quantity}, Components={string.Join(",", Components)} }}";
+    }
+}

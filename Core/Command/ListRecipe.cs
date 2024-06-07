@@ -40,4 +40,8 @@ public record RecipeDto(string Product, List<LineItemDto> Components)
 
 public record LineItemDto(String Item, float Quantity)
 {
+    public override string ToString()
+    {
+        return $"LineItemDto {{ Item={Item}, Quantity={Quantity} }}";
+    }
 }

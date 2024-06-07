@@ -29,12 +29,17 @@ public class ListOrdersTest
     public void Test1()
     {
         orderRepository.ReplaceAll(new List<Order> {
-            new Order(Item: "Iron", Quantity: 1, Components: new List<LineItem>())
+            new Order(Item: "Furnace", Quantity: 1, Components: new List<LineItem>() {
+                new LineItem(Item: "Iron", Quantity: 1)
+
+            })
         });
 
         ListOrdersQueryHandler query = new ListOrdersQueryHandler(orderRepository);
         List<OrderDto> items = query.Handle(new ListOrdersQuery());
         Assert.That(items, Is.OfLength(1));
-        Assert.That(items, Has.Items(BasekeeperMatchers.EqualToOrderDto(new OrderDto(Item: "Iron", Quantity: 1))));
+        Assert.That(items, Has.Items(BasekeeperMatchers.EqualToOrderDto(new OrderDto(Item: "Furnace", Quantity: 1, new List<LineItemDto>() {
+            new LineItemDto(Item: "Iron", Quantity: 1)
+        }))));
     }
 }
