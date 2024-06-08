@@ -41,7 +41,9 @@ public class ListInventoryTest
     public void CalculatesAvailable()
     {
         orderRepository.ReplaceAll(new List<Order> {
-            new Order(Item: "Iron", Quantity: 1, Components: new List<LineItem>())
+            new Order(Item: "Iron", Quantity: 1, Components: new List<LineItem>() {
+                new LineItem(Item: "Iron", Quantity: 1)
+            })
         });
         inventoryRepository.Save(new List<LineItem> {
             new LineItem(Item: "Iron", Quantity: 1)
@@ -51,5 +53,20 @@ public class ListInventoryTest
         List<InventoryItemDto> items = query.Handle(new ListInventoryQuery());
         Assert.That(items, Has.Items(Is.EqualTo(new InventoryItemDto(Item: "Iron", Quantity: 1, Available: 0))));
         Assert.That(items, Is.OfLength(1));
+    }
+
+    [Fact]
+    public void ShowMissingItems()
+    {
+        orderRepository.ReplaceAll(new List<Order> {
+            new Order(Item: "Iron", Quantity: 1, Components: new List<LineItem>() {
+                new LineItem(Item: "Iron", Quantity: 1)
+            })
+        });
+
+        ListInventoryQueryHandler query = new ListInventoryQueryHandler(inventoryRepository, orderRepository);
+        List<InventoryItemDto> items = query.Handle(new ListInventoryQuery());
+        Assert.That(items, Is.OfLength(1));
+        Assert.That(items, Has.Items(Is.EqualTo(new InventoryItemDto(Item: "Iron", Quantity: 0, Available: -1))));
     }
 }

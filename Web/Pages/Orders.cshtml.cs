@@ -32,7 +32,6 @@ public class OrdersModel : PageModel
         Json = JsonSerializer.Serialize(Items);
     }
 
-
     public IActionResult OnPost(OrderFormModel model)
     {
         CreateOrderCommand ModelToCommand(OrderFormModel model)

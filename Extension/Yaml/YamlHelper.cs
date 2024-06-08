@@ -15,6 +15,11 @@ class YamlHelper
                     .WithNamingConvention(CamelCaseNamingConvention.Instance)
                     .Build();
                 var Items = deserializer.Deserialize<T>(streamReader);
+
+                if (Items == null)
+                {
+                    return defaultValue;
+                }
                 return Items;
             }
         }
