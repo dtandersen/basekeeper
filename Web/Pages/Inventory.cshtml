@@ -20,8 +20,8 @@
                         <th scope="col">Available</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr v-for="(item, index) in items" :key="index">
+                <tbody v-for="(item, index) in items" :key="index">
+                    <tr>
                         <td><input name="item[]" v-model="item.Item"></td>
                         <td><input name="quantity[]" v-model="item.Quantity"></td>
                         <td>{{ item.Available }}</td>
@@ -29,10 +29,13 @@
                                 v-on:click="removeItem(index)">Delete</button>
                         </td>
                     </tr>
+                </tbody>
+                <tbody>
                     <tr>
                         <td colspan="4"><input type="submit" value="Save"></td>
                     </tr>
                 </tbody>
+
             </table>
         </form>
 
@@ -48,7 +51,7 @@
             data() {
                 return {
                     items: @Html.Raw(Model.Json)
-                                                        }
+                                                                    }
             },
             mounted() {
                 this.items.push({ Item: '', Quantity: '' })

@@ -20,7 +20,6 @@ public class OrdersModel : PageModel
     public OrdersModel(ILogger<InventoryModel> logger, InventoryRepository inventoryRepository, OrderRepository orderRepository, RecipeRepository recipeRepository)
     {
         _logger = logger;
-        // this.inventoryRepository = inventoryRepository;
         Json = "[]";
         updateInventoryCommandHandler = new OrderItemsCommandHandler(orderRepository);
         listOrdersQueryHandler = new ListOrdersQueryHandler(orderRepository);
@@ -31,61 +30,19 @@ public class OrdersModel : PageModel
     {
         var Items = listOrdersQueryHandler.Handle(new ListOrdersQuery());
         Json = JsonSerializer.Serialize(Items);
-        // Console.WriteLine($"{Json}");
     }
 
-    //     public IActionResult OnPost(OrdersFormModel model)
-    //     {
-    //         OrderItemsCommand ModelToCommand(OrdersFormModel model)
-    //         {
-    //             Console.WriteLine($"convert model {model}");
-    //             List<LineItem> lineItems = new List<LineItem>();
-    //             var items = model.Item;
-    //             for (int i = 0; i < items.Count; i++)
-    //             {
-    //                 var thisitem = items[i];
-    //                 if (thisitem != null)
-    //                 {
-    //                     int qty = model.Quantity == null ? 0 : Int32.Parse(model.Quantity[i] ?? "0");
-    //                     lineItems.Add(new LineItem(Item: thisitem, Quantity: qty));
-    //                 }
-    //             }
-    //             var orders = lineItems.Select(x => new Order(Item: x.Item, Quantity: x.Quantity, Components: new List<LineItem>())).ToList();
-    //             return new OrderItemsCommand(orders);
-    //         }
-
-    //         var command = ModelToCommand(model);
-    //         updateInventoryCommandHandler.Handle(command);
-    //         // Console.WriteLine($"{model}");
-
-    //         return RedirectToPage("./Orders");
-    //     }
-    // }
 
     public IActionResult OnPost(OrderFormModel model)
     {
         CreateOrderCommand ModelToCommand(OrderFormModel model)
         {
             Console.WriteLine($"convert model {model}");
-            // List<LineItem> lineItems = new List<LineItem>();
-            // var items = model.Item;
-            // for (int i = 0; i < items.Count; i++)
-            // {
-            //     var thisitem = items[i];
-            //     if (thisitem != null)
-            //     {
-            //         int qty = model.Quantity == null ? 0 : Int32.Parse(model.Quantity[i] ?? "0");
-            //         lineItems.Add(new LineItem(Item: thisitem, Quantity: qty));
-            //     }
-            // }
-            // var orders = lineItems.Select(x => new Order(Item: x.Item, Quantity: x.Quantity, Components: new List<LineItem>())).ToList();
-            // return new OrderItemsCommand(orders);
             return new CreateOrderCommand(Item: model.Item, Quantity: Int32.Parse(model.Quantity));
         }
 
         var command = ModelToCommand(model);
         createOrderCommandHandler.Handle(command);
-        // Console.WriteLine($"{model}");
 
         return RedirectToPage("./Orders");
     }

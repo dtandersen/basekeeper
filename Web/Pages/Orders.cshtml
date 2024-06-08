@@ -34,17 +34,21 @@
         </form>
 
         <form method="post">
-            <table class="table table-striped table-bordered">
+            <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th scope="col">Item</th>
                         <th scope="col">Quantity</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr v-for="(item, index) in items" :key="index">
-                        <td><input name="item[]" v-model="item.Item"></td>
-                        <td><input name="quantity[]" v-model="item.Quantity"></td>
+                <tbody v-for="(item, index) in items" :key="index">
+                    <tr class="table-primary">
+                        <td>{{ item.Item }}</td>
+                        <td>{{ item.Quantity }}</td>
+                    </tr>
+                    <tr class="table-secondary" v-for="(item, index) in item.Components" :key="index">
+                        <td>{{ item.Item }}</td>
+                        <td>{{ item.Quantity }}</td>
                     </tr>
                     @* <tr>
                     <td colspan="2"> <input type="submit" value="Save">
@@ -66,7 +70,7 @@
             data() {
                 return {
                     items: @Html.Raw(Model.Json)
-                                                                    }
+                                                                                                                        }
             },
             mounted() {
                 this.items.push({ Item: '', Quantity: '' })
