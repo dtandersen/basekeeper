@@ -7,10 +7,7 @@
 <div class="text-center">
     <h1 class="display-4">Orders</h1>
 
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-
     <div id="app">
-
 
         <form method="post">
             <table class="table table-striped table-bordered">
@@ -58,23 +55,27 @@
             </table>
         </form>
 
+
+        <AutoComplete v-model="value" :suggestions="items" @@complete="search" />
     </div>
 
 </div>
 
 @section Scripts {
-        <script>
-            const { createApp } = Vue
+            <script>
+                @* import AutoComplete from 'primevue/autocomplete'; *@
+                const { createApp } = Vue
 
-            createApp({
-                data() {
-                    return {
-                        items: @Html.Raw(Model.Json)
-                                                                                                                            }
-                },
-                mounted() {
-                    this.items.push({ Item: '', Quantity: '' })
-                }
-            }).mount('#app')
-        </script>
+                createApp({
+                    data() {
+                        return {
+                            items: @Html.Raw(Model.Json),
+                            search: "x"
+                                                                                                                                }
+                    },
+                    mounted() {
+                        this.items.push({ Item: '', Quantity: '' })
+                    }
+                }).mount('#app')
+            </script>
 }

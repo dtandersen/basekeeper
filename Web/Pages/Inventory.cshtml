@@ -7,8 +7,6 @@
 <div class="text-center">
     <h1 class="display-4">Inventory</h1>
 
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-
     <div id="app">
 
         <form method="post">
@@ -44,37 +42,37 @@
 </div>
 
 @section Scripts {
-    <script>
-        const { createApp } = Vue
+        <script>
+            const { createApp } = Vue
 
-        createApp({
-            data() {
-                return {
-                    items: @Html.Raw(Model.Json)
-                                                                    }
-            },
-            mounted() {
-                this.items.push({ Item: '', Quantity: '' })
-            },
-            methods: {
-                removeItem(index) {
-                    // log that we removed an item
-                    console.log('removing item at index', index)
-                    this.items.splice(index, 1)
+            createApp({
+                data() {
+                    return {
+                        items: @Html.Raw(Model.Json)
+                                                                        }
+                },
+                mounted() {
+                    this.items.push({ Item: '', Quantity: '' })
+                },
+                methods: {
+                    removeItem(index) {
+                        // log that we removed an item
+                        console.log('removing item at index', index)
+                        this.items.splice(index, 1)
+                    }
+                },
+                watch: {
+                    items: {
+                        handler: function (newItems) {
+                            // append row if last item changed
+                            lastitem = newItems[newItems.length - 1]
+                            if (lastitem.Item !== '' || lastitem.Quantity !== '') {
+                                newItems.push({ Item: '', Quantity: '' })
+                            }
+                        },
+                        deep: true
+                    }
                 }
-            },
-            watch: {
-                items: {
-                    handler: function (newItems) {
-                        // append row if last item changed
-                        lastitem = newItems[newItems.length - 1]
-                        if (lastitem.Item !== '' || lastitem.Quantity !== '') {
-                            newItems.push({ Item: '', Quantity: '' })
-                        }
-                    },
-                    deep: true
-                }
-            }
-        }).mount('#app')
-    </script>
+            }).mount('#app')
+        </script>
 }
