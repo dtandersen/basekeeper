@@ -4,22 +4,23 @@
 </script>
 
 <h1>Inventory</h1>
-
-<table class="table table-zebra table-md">
-	<thead>
-		<tr>
-			<th>Item</th>
-			<th>On Hand</th>
-			<th>Available</th>
-		</tr>
-	</thead>
-	<tbody>
-		{#each data.items as item}
+<div class="table-container">
+	<table class="table">
+		<thead>
 			<tr>
-				<td>{item.item}</td>
-				<td>{item.quantity}</td>
-				<td>{item.available}</td>
+				<th>Item</th>
+				<th>On Hand</th>
+				<th>Available</th>
 			</tr>
-		{/each}
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			{#each data.items as item}
+				<tr>
+					<td>{item.item}</td>
+					<td>{item.quantity}</td>
+					<td>{item.available}</td>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+</div>
