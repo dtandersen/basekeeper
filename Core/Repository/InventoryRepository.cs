@@ -10,4 +10,6 @@ public interface InventoryRepository
     List<LineItem> All();
 
     void Reset();
+
+    void Delete(string item);
 }

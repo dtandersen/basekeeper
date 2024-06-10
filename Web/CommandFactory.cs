@@ -23,4 +23,9 @@ public class CommandFactory
     {
         return new ListInventoryQueryHandler(inventoryRepository, orderRepository);
     }
+
+    public DeleteInventoryCommandHandler DeleteInventory()
+    {
+        return new DeleteInventoryCommandHandler(inventoryRepository);
+    }
 }

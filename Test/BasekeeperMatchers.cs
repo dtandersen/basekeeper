@@ -34,6 +34,11 @@ public class BasekeeperMatchers
 
         return Matches.AllOf(matcher, matcher2, matcher3);
     }
+
+    public static IMatcher<LineItem> EqualToLineItem(LineItem lineItem)
+    {
+        return Is.EqualTo(lineItem);
+    }
 }
 
 public class Xyz

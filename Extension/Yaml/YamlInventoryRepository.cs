@@ -13,6 +13,13 @@ public class YamlInventoryRepository : InventoryRepository
         return YamlHelper.Read("inventory.yaml", new List<LineItem>());
     }
 
+    public void Delete(string item)
+    {
+        List<LineItem> items = All();
+        items.RemoveAll(i => i.Item == item);
+        Save(items);
+    }
+
     public void Reset()
     {
         Save(new List<LineItem>());

@@ -20,5 +20,13 @@ namespace Basekeeper.Controller
             var handler = commandFactory.ListInventory();
             return handler.Handle(new ListInventoryQuery());
         }
+
+        [HttpDelete("{item}")]
+        public void Delete(string item)
+        {
+            Console.WriteLine($"Deleting {item}");
+            var handler = commandFactory.DeleteInventory();
+            handler.Handle(new DeleteInventoryCommand(item));
+        }
     }
 }
