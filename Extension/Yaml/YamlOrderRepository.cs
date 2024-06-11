@@ -1,8 +1,5 @@
-using Basekeeper.Command;
 using Basekeeper.Entity;
 using TelemRec;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 
 namespace Basekeeper.Repository.Yaml;
 
@@ -39,5 +36,12 @@ public class YamlOrderRepository : OrderRepository
     {
         logger.Info($"Saving {string.Join(",", lineItems)}...");
         YamlHelper.Write(ORDERS_YAML, lineItems.ToList());
+    }
+
+    public void Delete(string item)
+    {
+        var orders = All();
+        orders.RemoveAll(o => o.Item == item);
+        ReplaceAll(orders);
     }
 }

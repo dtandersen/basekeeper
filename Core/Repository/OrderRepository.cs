@@ -11,4 +11,6 @@ public interface OrderRepository
     void ReplaceAll(IEnumerable<Order> orders);
 
     void Create(Order order);
+
+    void Delete(string item);
 }
