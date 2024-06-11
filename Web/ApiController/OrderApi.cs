@@ -22,15 +22,17 @@ namespace Basekeeper.Controller
         }
 
         [HttpPost]
-        public void Post([FromBody] CreateOrderCommand order)
+        public void Post([FromBody] CreateOrderCommand command)
         {
+            Console.WriteLine($"Creating {command.Item} with quantity {command.Quantity}");
             var handler = commandFactory.CreateOrder();
-            handler.Handle(new CreateOrderCommand(Item: order.Item, Quantity: order.Quantity));
+            handler.Handle(new CreateOrderCommand(Item: command.Item, Quantity: command.Quantity));
         }
 
-        [HttpDelete]
+        [HttpDelete("{item}")]
         public void Delete(string item)
         {
+            Console.WriteLine($"Deleting {item}");
             var handler = commandFactory.DeleteOrder();
             handler.Handle(new DeleteOrderCommand(Item: item));
         }

@@ -6,6 +6,7 @@ namespace Basekeeper.Command;
 
 public record CreateOrderCommand(string Item, int Quantity)
 {
+    public CreateOrderCommand() : this("", 0) { }
 }
 
 public class CreateOrderCommandHandler : CommandHandler<CreateOrderCommand>
