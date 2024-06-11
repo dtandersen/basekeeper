@@ -21,6 +21,14 @@ namespace Basekeeper.Controller
             return handler.Handle(new ListInventoryQuery());
         }
 
+        [HttpPost]
+        public void Post([FromBody] CreateInventoryCommand command)
+        {
+            Console.WriteLine($"Creating {command.Item} with quantity {command.Quantity}");
+            var handler = commandFactory.CreateInventory();
+            handler.Handle(command);
+        }
+
         [HttpDelete("{item}")]
         public void Delete(string item)
         {

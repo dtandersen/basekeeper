@@ -28,4 +28,9 @@ public class CommandFactory
     {
         return new DeleteInventoryCommandHandler(inventoryRepository);
     }
+
+    internal CreateInventoryCommandHandler CreateInventory()
+    {
+        return new CreateInventoryCommandHandler(inventoryRepository);
+    }
 }

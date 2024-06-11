@@ -29,4 +29,11 @@ public class YamlInventoryRepository : InventoryRepository
     {
         YamlHelper.Write("inventory.yaml", items);
     }
+
+    public void Save(LineItem item)
+    {
+        List<LineItem> items = All();
+        items.Add(item);
+        Save(items);
+    }
 }
